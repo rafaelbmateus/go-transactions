@@ -64,6 +64,21 @@ func (mr *MockUseCaseMockRecorder) GetAccount(id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccount", reflect.TypeOf((*MockUseCase)(nil).GetAccount), id)
 }
 
+// GetTransactions mocks base method
+func (m *MockUseCase) GetTransactions() ([]*transaction.Transaction, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTransactions")
+	ret0, _ := ret[0].([]*transaction.Transaction)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTransactions indicates an expected call of GetTransactions
+func (mr *MockUseCaseMockRecorder) GetTransactions() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTransactions", reflect.TypeOf((*MockUseCase)(nil).GetTransactions))
+}
+
 // RegisterTransaction mocks base method
 func (m *MockUseCase) RegisterTransaction(arg0 *transaction.Transaction) error {
 	m.ctrl.T.Helper()

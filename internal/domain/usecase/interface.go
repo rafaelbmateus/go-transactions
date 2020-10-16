@@ -9,5 +9,6 @@ import (
 type UseCase interface {
 	NewAccount(*account.Account) (*account.Account, error)
 	GetAccount(id int) (*account.Account, error)
+	GetTransactions() ([]*transaction.Transaction, error)
 	RegisterTransaction(*transaction.Transaction) error
 }

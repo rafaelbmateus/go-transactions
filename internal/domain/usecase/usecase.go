@@ -46,3 +46,12 @@ func (s *usecase) RegisterTransaction(t *transaction.Transaction) error {
 	}
 	return nil
 }
+
+// GetTransactions get all transactions
+func (s *usecase) GetTransactions() ([]*transaction.Transaction, error) {
+	transactions, err := s.transactionManager.List()
+	if err != nil {
+		return nil, err
+	}
+	return transactions, nil
+}

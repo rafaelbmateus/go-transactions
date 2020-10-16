@@ -88,3 +88,11 @@ curl -X POST \
     "amount": 123.45
   }'
 ```
+
+## Get all transactions
+Send a request to `/transactions` with the `GET` verb.
+
+For example:
+```bash
+curl localhost:3000/transactions
+```
