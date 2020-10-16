@@ -11,7 +11,7 @@ This project is an API using the [Go programming language](https://golang.org/).
 - [Project Layout](https://github.com/golang-standards/project-layout)
 
 ## Get started
-The essential commands are provided from the [Makefile]().
+The essential commands are provided from the [Makefile](https://github.com/rafaelbmateus/go-transactions/blob/main/Makefile).
 
 To run the project tests you can use the command `test`. For example:
 ```
