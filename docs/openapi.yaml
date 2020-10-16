@@ -1,0 +1,98 @@
+openapi: 3.0.1
+info:
+  title: go-transactions
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: localhost
+paths:
+  /accounts:
+    post:
+      tags:
+        - accounts
+      description: Create a new account
+      responses:
+        200:
+          description: Account created with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  types:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Account"
+        500:
+          description: Internal server error
+  /accounts/{accountId}:
+    get:
+      tags:
+        - accounts
+      description: Get account informations
+      parameters:
+        - in: path
+          name: accountId
+          description: The account identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Account got with success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        400:
+          description: Bad request
+        404:
+          description: Account not found
+        500:
+          description: Internal server error
+  /transactions:
+    post:
+      tags:
+        - transactions
+      description: Register a new transaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Transaction"
+      responses:
+        200:
+          description: Transaction created with successful
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        type:
+          type: string
+          example: model
+        provider:
+          type: string
+          example: analytics
+        name:
+          type: string
+          example: empresa-bita-score
+        description:
+          type: string
+          example: "Modelo de Analytics para calcular o score do Bita"
+    Transaction:
+      type: object
+      properties:
+        account_id:
+          type: number
+          example: 1
+        operation_type_id:
+          type: number
+          example: 4
+        amount:
+          type: number
+          example: 123.45
