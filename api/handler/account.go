@@ -29,14 +29,17 @@ func CreateAccount(u usecase.UseCase) gin.HandlerFunc {
 			return
 		}
 
-		acc, err := u.NewAccount(&account.Account{ID: a.ID, DocumentNumber: a.DocumentNumber})
+		acc, err := u.NewAccount(&account.Account{
+			ID: a.ID, DocumentNumber: a.DocumentNumber,
+			AvailableCreditLimit: a.AvailableCreditLimit,
+		})
 		if err != nil {
 			responseFailure(c, http.StatusText(http.StatusInternalServerError),
 				"Account can't be created",
 				fmt.Sprintf("Internal server error when creating a new account - datails err: %s", err.Error()), "", http.StatusInternalServerError)
 			return
 		}
-		c.JSON(http.StatusOK, acc)
+		c.JSON(http.StatusCreated, acc)
 	}
 }
 

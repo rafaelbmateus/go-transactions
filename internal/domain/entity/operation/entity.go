@@ -4,4 +4,5 @@ package operation
 type OperationType struct {
 	ID          int
 	Description string
+	IsDebit     bool
 }

@@ -27,6 +27,7 @@ func TestGet(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, u.ID, saved.ID)
 	assert.Equal(t, u.DocumentNumber, saved.DocumentNumber)
+	assert.Equal(t, u.AvailableCreditLimit, saved.AvailableCreditLimit)
 }
 
 func TestUpdate(t *testing.T) {

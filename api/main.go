@@ -20,7 +20,7 @@ func main() {
 	transactionRepo := transaction.NewInmemRepository()
 	transactionManager := transaction.NewManager(transactionRepo)
 
-	usecase := usecase.NewUseCase(accountManager, transactionManager)
+	usecase := usecase.NewUseCase(accountManager, operationManager, transactionManager)
 
 	r := gin.Default()
 
@@ -40,8 +40,8 @@ func main() {
 }
 
 func defaultOperations(o operation.Manager) {
-	_ = o.Create(&operation.OperationType{ID: 1, Description: "Compra a vista"})
-	_ = o.Create(&operation.OperationType{ID: 2, Description: "Compra parcelada"})
-	_ = o.Create(&operation.OperationType{ID: 3, Description: "Saque"})
-	_ = o.Create(&operation.OperationType{ID: 4, Description: "Pagamento"})
+	_ = o.Create(&operation.OperationType{ID: 1, Description: "Compra a vista", IsDebit: true})
+	_ = o.Create(&operation.OperationType{ID: 2, Description: "Compra parcelada", IsDebit: true})
+	_ = o.Create(&operation.OperationType{ID: 3, Description: "Saque", IsDebit: true})
+	_ = o.Create(&operation.OperationType{ID: 4, Description: "Pagamento", IsDebit: false})
 }

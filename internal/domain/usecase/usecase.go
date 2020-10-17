@@ -1,19 +1,24 @@
 package usecase
 
 import (
+	"errors"
+
 	"github.com/rafaelbmateus/go-transactions/internal/domain/entity/account"
+	"github.com/rafaelbmateus/go-transactions/internal/domain/entity/operation"
 	"github.com/rafaelbmateus/go-transactions/internal/domain/entity/transaction"
 )
 
 type usecase struct {
 	accountManager     account.Manager
+	operationManager   operation.Manager
 	transactionManager transaction.Manager
 }
 
 // NewUseCase create new use case
-func NewUseCase(a account.Manager, t transaction.Manager) *usecase {
+func NewUseCase(a account.Manager, o operation.Manager, t transaction.Manager) *usecase {
 	return &usecase{
 		accountManager:     a,
+		operationManager:   o,
 		transactionManager: t,
 	}
 }
@@ -40,7 +45,27 @@ func (s *usecase) GetAccount(id int) (*account.Account, error) {
 
 // RegisterTransaction register a new transaction
 func (s *usecase) RegisterTransaction(t *transaction.Transaction) error {
-	err := s.transactionManager.Create(t)
+	account, err := s.accountManager.Get(t.AccountID)
+	if err != nil {
+		return err
+	}
+
+	operation, err := s.operationManager.Get(t.OperationTypeID)
+	if err != nil {
+		return err
+	}
+
+	if operation.IsDebit {
+		if account.AvailableCreditLimit <= t.Amount {
+			return errors.New("No credit limit available")
+		}
+		account.AvailableCreditLimit -= t.Amount
+		err = s.accountManager.Update(account)
+		if err != nil {
+			return err
+		}
+	}
+	err = s.transactionManager.Create(t)
 	if err != nil {
 		return err
 	}

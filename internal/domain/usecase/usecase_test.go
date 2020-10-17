@@ -3,12 +3,15 @@ package usecase
 import (
 	"testing"
 
+	"github.com/rafaelbmateus/go-transactions/internal/domain/entity/operation"
+
 	"github.com/rafaelbmateus/go-transactions/internal/domain/entity/transaction"
 
 	"github.com/go-playground/assert"
 	"github.com/golang/mock/gomock"
 	"github.com/rafaelbmateus/go-transactions/internal/domain/entity/account"
 	amock "github.com/rafaelbmateus/go-transactions/internal/domain/entity/account/mock"
+	omock "github.com/rafaelbmateus/go-transactions/internal/domain/entity/operation/mock"
 	tmock "github.com/rafaelbmateus/go-transactions/internal/domain/entity/transaction/mock"
 )
 
@@ -16,8 +19,9 @@ func TestNewAccount(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 	aMock := amock.NewMockManager(controller)
+	oMock := omock.NewMockManager(controller)
 	tMock := tmock.NewMockManager(controller)
-	uc := NewUseCase(aMock, tMock)
+	uc := NewUseCase(aMock, oMock, tMock)
 	t.Run("with success", func(t *testing.T) {
 		a := account.NewFixtureAccount()
 		aMock.EXPECT().Create(a).Return(&account.Account{ID: a.ID, DocumentNumber: a.DocumentNumber}, nil)
@@ -32,8 +36,9 @@ func TestGetAccount(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 	aMock := amock.NewMockManager(controller)
+	oMock := omock.NewMockManager(controller)
 	tMock := tmock.NewMockManager(controller)
-	uc := NewUseCase(aMock, tMock)
+	uc := NewUseCase(aMock, oMock, tMock)
 	t.Run("with success", func(t *testing.T) {
 		a := account.NewFixtureAccount()
 		aMock.EXPECT().Get(a.ID).Return(&account.Account{ID: a.ID, DocumentNumber: a.DocumentNumber}, nil)
@@ -48,10 +53,15 @@ func TestRegisterTransaction(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 	aMock := amock.NewMockManager(controller)
+	oMock := omock.NewMockManager(controller)
 	tMock := tmock.NewMockManager(controller)
-	uc := NewUseCase(aMock, tMock)
+	uc := NewUseCase(aMock, oMock, tMock)
 	t.Run("with success", func(t *testing.T) {
+		a := account.NewFixtureAccount()
+		o := operation.NewFixtureOperation()
 		t1 := transaction.NewFixtureTransaction()
+		aMock.EXPECT().Get(a.ID).Return(&account.Account{ID: a.ID, DocumentNumber: a.DocumentNumber}, nil)
+		oMock.EXPECT().Get(o.ID).Return(&operation.OperationType{}, nil)
 		tMock.EXPECT().Create(t1).Return(nil)
 		err := uc.RegisterTransaction(t1)
 		assert.Equal(t, nil, err)
@@ -63,8 +73,9 @@ func TestGetTransactions(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 	aMock := amock.NewMockManager(controller)
+	oMock := omock.NewMockManager(controller)
 	tMock := tmock.NewMockManager(controller)
-	uc := NewUseCase(aMock, tMock)
+	uc := NewUseCase(aMock, oMock, tMock)
 	t.Run("with success", func(t *testing.T) {
 		t1 := transaction.NewFixtureTransaction()
 		t2 := transaction.NewFixtureTransaction()
@@ -88,5 +99,24 @@ func TestGetTransactions(t *testing.T) {
 		transactions, err := uc.GetTransactions()
 		assert.Equal(t, nil, err)
 		assert.Equal(t, len(transactions), 2)
+	})
+}
+
+func TestAvaibleCreditLimit(t *testing.T) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+	aMock := amock.NewMockManager(controller)
+	oMock := omock.NewMockManager(controller)
+	tMock := tmock.NewMockManager(controller)
+	uc := NewUseCase(aMock, oMock, tMock)
+	t.Run("with success", func(t *testing.T) {
+		a := account.NewFixtureAccount()
+		o := operation.NewFixtureOperation()
+		t1 := transaction.NewFixtureTransaction()
+		aMock.EXPECT().Get(a.ID).Return(&account.Account{ID: a.ID, DocumentNumber: a.DocumentNumber}, nil)
+		oMock.EXPECT().Get(o.ID).Return(&operation.OperationType{}, nil)
+		tMock.EXPECT().Create(t1).Return(nil)
+		err := uc.RegisterTransaction(t1)
+		assert.Equal(t, nil, err)
 	})
 }

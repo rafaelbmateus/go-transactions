@@ -47,7 +47,8 @@ curl -X POST \
   localhost:3000/accounts \
   -d '{
     "account_id": 1,
-    "document_number": "12345678900"
+    "document_number": "12345678900",
+    "available_credit_limit": 1000
   }'
 ```
 
@@ -55,7 +56,8 @@ Response:
 ```json
 {
   "account_id": "1",
-  "document_number": "12345678900"
+  "document_number": "12345678900",
+  "available_credit_limit": 1000
 }
 ```
 
@@ -71,7 +73,8 @@ Response:
 ```json
 {
   "account_id": 1,
-  "document_number": "12345678900"
+  "document_number": "12345678900",
+  "available_credit_limit": 1000
 }
 ```
 

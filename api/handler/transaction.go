@@ -35,9 +35,9 @@ func RegisterTransaction(u usecase.UseCase) gin.HandlerFunc {
 		var t presenter.Transaction
 		err := c.BindJSON(&t)
 		if err != nil {
-			responseFailure(c, http.StatusText(http.StatusInternalServerError),
+			responseFailure(c, http.StatusText(http.StatusBadRequest),
 				"Transactions can't be created",
-				"Error when converting the parameters sent to json", "", http.StatusInternalServerError)
+				"Error when converting the parameters sent to json", "", http.StatusBadRequest)
 			return
 		}
 
@@ -54,6 +54,6 @@ func RegisterTransaction(u usecase.UseCase) gin.HandlerFunc {
 			return
 		}
 
-		c.Status(http.StatusOK)
+		c.Status(http.StatusCreated)
 	}
 }
