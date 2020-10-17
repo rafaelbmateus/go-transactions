@@ -60,11 +60,15 @@ func (s *usecase) RegisterTransaction(t *transaction.Transaction) error {
 			return errors.New("No credit limit available")
 		}
 		account.AvailableCreditLimit -= t.Amount
-		err = s.accountManager.Update(account)
-		if err != nil {
-			return err
-		}
+	} else {
+		account.AvailableCreditLimit += t.Amount
 	}
+
+	err = s.accountManager.Update(account)
+	if err != nil {
+		return err
+	}
+
 	err = s.transactionManager.Create(t)
 	if err != nil {
 		return err
